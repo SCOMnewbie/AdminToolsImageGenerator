@@ -14,9 +14,9 @@ task docker_build {
 }
 
 task docker_tag {
-    docker tag admintools:latest ghcr.io/SCOMnewbie/admintools:latest
+    docker tag admintools:latest ghcr.io/scomnewbie/admintools:latest
 }
 
 task docker_push {
-    docker push ghcr.io/SCOMnewbie/admintools:latest
+    docker push ghcr.io/scomnewbie/admintools:latest
 }
