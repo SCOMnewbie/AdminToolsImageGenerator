@@ -9,12 +9,11 @@ jobs:
     build:
       name: Run Build
       runs-on: ubuntu-latest
-      environment: PAT
+      environment: Build
       steps:
         - uses: actions/checkout@v1
         - name: ScriptBuild
           env:
             PAT: ${{ secrets.PAT }}
-            COUCOU: ${{ env.COUCOU }}
           run: ./build.ps1 -Tasks . -ResolveDependency
           shell: pwsh
