@@ -4,7 +4,7 @@ task generate_latest_dockerfile {
 }
 
 task connect_to_docker {
-    Connect-Docker -Username 'scomnewbie' -Password 'coucou' #$env:PAT
+    Connect-Docker -Username 'scomnewbie' -Password $env:PAT
 }
 
 task Read_env_variable {
