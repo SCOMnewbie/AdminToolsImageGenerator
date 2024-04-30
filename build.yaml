@@ -50,6 +50,7 @@ BuildWorkflow:
     - Build_Module_ModuleBuilder
     - generate_latest_dockerfile
     - Read_env_variable
+    - ghcr_login
     - connect_to_docker
 
   pack:

@@ -10,3 +10,7 @@ task connect_to_docker {
 task Read_env_variable {
     dir env:
 }
+
+task ghcr_login {
+    git config --global credential.helper store
+}
