@@ -1,0 +1,74 @@
+﻿#FROM mcr.microsoft.com/powershell:7.3-ubuntu-20.04
+FROM mcr.microsoft.com/powershell:latest
+
+#https://releases.hashicorp.com/terraform
+ARG TERRAFORM_VERSION=<_Hashicorp_Terraform_LatestStableVersion_>
+#https://releases.hashicorp.com/vault
+ARG VAULT_VERSION=<_Hashicorp_Vault_LatestStableVersion_>
+# https://github.com/project-copacetic/copacetic/releases
+ARG COPACETIC_VERSION=<_Github_project-copacetic/Copacetic_LatestStableVersion_>
+#https://github.com/aquasecurity/trivy/releases
+ARG TRIVY_VERSION=<_Github_aquasecurity/Trivy_LatestStableVersion_>
+#https://github.com/cue-lang/cue/releases
+ARG CUELANG_VERSION=<_Github_cue-lang/cue_LatestStableVersion_>
+#https://github.com/open-policy-agent/opa/releases
+ARG OPA_VERSION=<_Github_open-policy-agent/opa_LatestStableVersion_>
+
+ARG TERRAFORM_VERSION_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+ARG VAULT_VERSION_URL=https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
+ARG COPACETIC_VERSION_URL=https://github.com/project-copacetic/copacetic/releases/download/v${COPACETIC_VERSION}/copa_${COPACETIC_VERSION}_linux_amd64.tar.gz
+ARG TRIVY_VERSION_URL=https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
+ARG CUELANG_VERSION_URL=https://github.com/cue-lang/cue/releases/download/v${CUELANG_VERSION}/cue_v${CUELANG_VERSION}_linux_amd64.tar.gz
+ARG OPA_VERSION_URL=https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}/opa_linux_amd64
+
+SHELL ["/usr/bin/pwsh", "-command", "$ErrorActionPreference = 'Stop';"]
+
+# Install azcopy
+RUN invoke-webrequest -Uri https://aka.ms/downloadazcopy-v10-linux -OutFile /tmp/azcopy.tar.gz && \
+    tar -xvf /tmp/azcopy.tar.gz --exclude=*.txt -C /tmp/ && \
+    cp /tmp/azcopy_linux_amd64_*/azcopy /usr/local/bin/
+
+# Install required pwsh modules
+RUN Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+RUN Install-module az.accounts, az.resources, pester, PSMSALNet
+
+# Install AWS CLI
+RUN Invoke-WebRequest -Uri "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -OutFile /tmp/awscli.zip && \
+    Expand-Archive /tmp/awscli.zip /tmp && \
+    /tmp/aws/install
+
+# Install Az CLI
+RUN Invoke-WebRequest -Uri "https://aka.ms/InstallAzureCLIDeb" -OutFile /tmp/deb_install.sh && \
+    bash /tmp/deb_install.sh
+
+# Install Terraform 
+RUN Invoke-WebRequest -Uri $env:TERRAFORM_VERSION_URL -OutFile /tmp/terraform.zip && \
+    Expand-Archive /tmp/terraform.zip /usr/local/bin
+
+# Install Vault CLI 
+RUN Invoke-WebRequest -Uri $env:VAULT_VERSION_URL -OutFile /tmp/vault.zip && \
+    Expand-Archive /tmp/vault.zip /usr/local/bin
+
+# Install Copacetic
+# https://project-copacetic.github.io/copacetic/website
+RUN Invoke-WebRequest -Uri $env:COPACETIC_VERSION_URL -OutFile /tmp/copa.tar.gz && \
+    tar -xvf /tmp/copa.tar.gz --exclude=*.txt -C /tmp && \
+    Copy-Item /tmp/copa /usr/local/bin
+
+# Install Trivy
+RUN Invoke-WebRequest -Uri $env:TRIVY_VERSION_URL -OutFile /tmp/trivy.deb && \
+    dpkg -i /tmp/trivy.deb
+
+# Install Cuelang
+RUN Invoke-WebRequest -Uri $env:CUELANG_VERSION_URL -OutFile /tmp/cue.tar.gz && \
+    tar -xvf /tmp/cue.tar.gz --exclude=*.txt -C /tmp && \
+    Copy-Item /tmp/cue /usr/local/bin
+
+# Install Opa
+# https://github.com/open-policy-agent/opa/releases/download/v0.64.1/opa_linux_amd64
+RUN Invoke-WebRequest -Uri $env:OPA_VERSION_URL -OutFile /usr/local/bin/opa && \
+    chmod 500 /usr/local/bin/opa
+
+# Clean the image
+RUN Remove-Item /tmp/* -Recurse -Force -Confirm:$false
+    
