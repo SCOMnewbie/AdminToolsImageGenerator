@@ -12,5 +12,7 @@ jobs:
       steps:
         - uses: actions/checkout@v1
         - name: ScriptBuild
+          env:
+            PAT: ${{ secrets.PAT }}
           run: ./build.ps1 -Tasks . -ResolveDependency
           shell: pwsh
