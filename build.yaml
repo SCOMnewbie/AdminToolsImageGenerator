@@ -49,8 +49,8 @@ BuildWorkflow:
     - Clean
     - Build_Module_ModuleBuilder
     - generate_latest_dockerfile
-    - Read_env_variable
     - connect_to_docker
+    - docker_build
 
   pack:
     - build

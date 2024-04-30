@@ -7,6 +7,8 @@ task connect_to_docker {
     Connect-Docker -Username 'scomnewbie' -Password $env:PAT
 }
 
-task Read_env_variable {
-    dir env:
+task docker_build {
+    $path = Join-Path 'source' 'Files'
+    cd $path
+    docker build -t admintools:latest .
 }
