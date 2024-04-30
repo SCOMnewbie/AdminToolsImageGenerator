@@ -12,3 +12,11 @@ task docker_build {
     cd $path
     docker build -t admintools:latest .
 }
+
+task docker_tag {
+    docker tag admintools:latest ghcr.io/SCOMnewbie/admintools:latest
+}
+
+task docker_push {
+    docker push ghcr.io/SCOMnewbie/admintools:latest
+}
