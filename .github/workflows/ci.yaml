@@ -14,5 +14,6 @@ jobs:
         - name: ScriptBuild
           env:
             PAT: ${{ secrets.PAT }}
+            COUCOU: ${{ env.COUCOU }}
           run: ./build.ps1 -Tasks . -ResolveDependency
           shell: pwsh
