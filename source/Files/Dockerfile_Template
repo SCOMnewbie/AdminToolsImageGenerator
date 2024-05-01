@@ -13,6 +13,7 @@ ARG TRIVY_VERSION=<_Github_aquasecurity/Trivy_LatestStableVersion_>
 ARG CUELANG_VERSION=<_Github_cue-lang/cue_LatestStableVersion_>
 #https://github.com/open-policy-agent/opa/releases
 ARG OPA_VERSION=<_Github_open-policy-agent/opa_LatestStableVersion_>
+ARG KUBECTL_VERSION=<_Kubernetes_kubectl_LatestStableVersion_>
 
 ARG TERRAFORM_VERSION_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ARG VAULT_VERSION_URL=https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
@@ -20,6 +21,8 @@ ARG COPACETIC_VERSION_URL=https://github.com/project-copacetic/copacetic/release
 ARG TRIVY_VERSION_URL=https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
 ARG CUELANG_VERSION_URL=https://github.com/cue-lang/cue/releases/download/v${CUELANG_VERSION}/cue_v${CUELANG_VERSION}_linux_amd64.tar.gz
 ARG OPA_VERSION_URL=https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}/opa_linux_amd64
+ARG KUBECTL_VERSION_URL=https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl
+ARG KUBECTL_SHA_VERSION_URL=https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256
 
 SHELL ["/usr/bin/pwsh", "-command", "$ErrorActionPreference = 'Stop';"]
 
@@ -68,6 +71,13 @@ RUN Invoke-WebRequest -Uri $env:CUELANG_VERSION_URL -OutFile /tmp/cue.tar.gz && 
 # https://github.com/open-policy-agent/opa/releases/download/v0.64.1/opa_linux_amd64
 RUN Invoke-WebRequest -Uri $env:OPA_VERSION_URL -OutFile /usr/local/bin/opa && \
     chmod 500 /usr/local/bin/opa
+
+# Install Kubectl
+# https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
+RUN Invoke-WebRequest -Uri $env:KUBECTL_VERSION_URL -OutFile /tmp/kubectl && \
+    Invoke-WebRequest -Uri $env:KUBECTL_SHA_VERSION_URL -OutFile /tmp/kubectl.sha && \
+    sha265sum --check /tmp/kubectl.sha && \
+    Copy-Item /tmp/kubectl /usr/local/bin
 
 # Clean the image
 RUN Remove-Item /tmp/* -Recurse -Force -Confirm:$false

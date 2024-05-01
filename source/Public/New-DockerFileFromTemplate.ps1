@@ -82,6 +82,26 @@ function New-DockerFileFromTemplate {
                 }
                 break
             }
+            'Kubernetes_*' {
+                Write-Verbose "[$((Get-Date).TimeOfDay)] Kubernetes tool detected Let's fetch latest stable version"
+                $LatestStableVersion = Get-LatestStableKubectlVersion
+                # if DockerFile exist use it else use template
+                if (Test-Path $(Join-Path $WorkingDirectory 'Dockerfile')) {
+                    Write-Verbose "[$((Get-Date).TimeOfDay)] Dockerfile exist, let's update it"
+                    $TempFile = Get-Content $(Join-Path $WorkingDirectory Dockerfile)
+                    $TempFile = $TempFile -replace "<_Kubernetes_kubectl_LatestStableVersion_>", $LatestStableVersion
+                    Set-Content -Path $(Join-Path $WorkingDirectory 'Dockerfile') -Value $TempFile
+                    Write-Output $($psstyle.Background.BrightMagenta)" DockerFile has been updated for Kubectl version with version $LatestStableVersion "$($psstyle.Reset)
+                }
+                else {
+                    Write-Verbose "[$((Get-Date).TimeOfDay)] No Dockerfile detected, let's create a new one"
+                    $TempFile = Get-Content $(Join-Path $WorkingDirectory Dockerfile_Template)
+                    $TempFile = $TempFile -replace "<_Kubernetes_kubectl_LatestStableVersion_>", $LatestStableVersion
+                    Set-Content -Path $(Join-Path $WorkingDirectory 'Dockerfile') -Value $TempFile
+                    Write-Output $($psstyle.Background.Magenta)" DockerFile has been created for Kubectl version with version $LatestStableVersion "$($psstyle.Reset)
+                }
+                break
+            }
             Default { Write-Output $($psstyle.Background.BrightRed)" Tool not currently supported to be updated "$($psstyle.Reset) }
         }
     }
