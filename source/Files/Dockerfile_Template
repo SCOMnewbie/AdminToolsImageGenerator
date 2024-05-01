@@ -14,7 +14,7 @@ ARG CUELANG_VERSION=<_Github_cue-lang/cue_LatestStableVersion_>
 #https://github.com/open-policy-agent/opa/releases
 ARG OPA_VERSION=<_Github_open-policy-agent/opa_LatestStableVersion_>
 ARG KUBECTL_VERSION=<_Kubernetes_kubectl_LatestStableVersion_>
-ARG KUBELOGIN_VERSION= <_Github_Azure/kubelogin_LatestStableVersion_>
+ARG KUBELOGIN_VERSION=<_Github_Azure/kubelogin_LatestStableVersion_>
 
 ARG TERRAFORM_VERSION_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ARG VAULT_VERSION_URL=https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
