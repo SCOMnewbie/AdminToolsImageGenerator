@@ -77,8 +77,8 @@ RUN Invoke-WebRequest -Uri $env:OPA_VERSION_URL -OutFile /usr/local/bin/opa && \
 # Install Kubectl
 # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
 RUN Invoke-WebRequest -Uri $env:KUBECTL_VERSION_URL -OutFile /tmp/kubectl && \
-    Invoke-WebRequest -Uri $env:KUBECTL_SHA_VERSION_URL -OutFile /tmp/kubectl.sha && \
-    Invoke-Expression -Command '/usr/bin/sha256sum --check /tmp/kubectl.sha' && \
+    Invoke-WebRequest -Uri $env:KUBECTL_SHA_VERSION_URL -OutFile /tmp/kubectl.sha256 && \
+    Invoke-Expression -command 'echo "$(cat /tmp/kubectl.sha256) /tmp/kubectl" | sha256sum --check' && \
     Copy-Item /tmp/kubectl /usr/local/bin
 
 # Clean the image
