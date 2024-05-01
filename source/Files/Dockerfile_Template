@@ -26,6 +26,8 @@ ARG KUBECTL_SHA_VERSION_URL=https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/lin
 
 SHELL ["/usr/bin/pwsh", "-command", "$ErrorActionPreference = 'Stop';"]
 
+RUN apt -y install coreutils
+
 # Install azcopy
 RUN invoke-webrequest -Uri https://aka.ms/downloadazcopy-v10-linux -OutFile /tmp/azcopy.tar.gz && \
     tar -xvf /tmp/azcopy.tar.gz --exclude=*.txt -C /tmp/ && \
