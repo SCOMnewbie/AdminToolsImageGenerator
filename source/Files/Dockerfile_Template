@@ -26,7 +26,6 @@ ARG KUBECTL_VERSION_URL=https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/a
 ARG KUBECTL_SHA_VERSION_URL=https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256
 ARG KUBELOGIN_VERSION_URL=https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERSION}/kubelogin-linux-amd64.zip
 
-
 SHELL ["/usr/bin/pwsh", "-command", "$ErrorActionPreference = 'Stop';"]
 
 RUN apt -y install coreutils
@@ -82,6 +81,7 @@ RUN Invoke-WebRequest -Uri $env:OPA_VERSION_URL -OutFile /usr/local/bin/opa && \
 RUN Invoke-WebRequest -Uri $env:KUBECTL_VERSION_URL -OutFile /tmp/kubectl && \
     Invoke-WebRequest -Uri $env:KUBECTL_SHA_VERSION_URL -OutFile /tmp/kubectl.sha256 && \
     Invoke-Expression -command 'echo "$(cat /tmp/kubectl.sha256) /tmp/kubectl" | sha256sum --check' && \
+    Invoke-Expression -command 'if(0 -ne $LASTEXITCODE){exit 1}' && \
     Copy-Item /tmp/kubectl /usr/local/bin
 
 # Install Kubelogin
