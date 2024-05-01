@@ -76,7 +76,7 @@ RUN Invoke-WebRequest -Uri $env:OPA_VERSION_URL -OutFile /usr/local/bin/opa && \
 # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
 RUN Invoke-WebRequest -Uri $env:KUBECTL_VERSION_URL -OutFile /tmp/kubectl && \
     Invoke-WebRequest -Uri $env:KUBECTL_SHA_VERSION_URL -OutFile /tmp/kubectl.sha && \
-    sha265sum --check /tmp/kubectl.sha && \
+    & sha265sum --check /tmp/kubectl.sha && \
     Copy-Item /tmp/kubectl /usr/local/bin
 
 # Clean the image
