@@ -14,6 +14,7 @@ ARG CUELANG_VERSION=<_Github_cue-lang/cue_LatestStableVersion_>
 #https://github.com/open-policy-agent/opa/releases
 ARG OPA_VERSION=<_Github_open-policy-agent/opa_LatestStableVersion_>
 ARG KUBECTL_VERSION=<_Kubernetes_kubectl_LatestStableVersion_>
+ARG KUBELOGIN_VERSION= <_Github_Azure/kubelogin_LatestStableVersion_>
 
 ARG TERRAFORM_VERSION_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ARG VAULT_VERSION_URL=https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
@@ -23,6 +24,8 @@ ARG CUELANG_VERSION_URL=https://github.com/cue-lang/cue/releases/download/v${CUE
 ARG OPA_VERSION_URL=https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}/opa_linux_amd64
 ARG KUBECTL_VERSION_URL=https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl
 ARG KUBECTL_SHA_VERSION_URL=https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256
+ARG KUBELOGIN_VERSION_URL=https://github.com/Azure/kubelogin/releases/download/v${KUBELOGIN_VERSION}/kubelogin-linux-amd64.zip
+
 
 SHELL ["/usr/bin/pwsh", "-command", "$ErrorActionPreference = 'Stop';"]
 
@@ -80,6 +83,10 @@ RUN Invoke-WebRequest -Uri $env:KUBECTL_VERSION_URL -OutFile /tmp/kubectl && \
     Invoke-WebRequest -Uri $env:KUBECTL_SHA_VERSION_URL -OutFile /tmp/kubectl.sha256 && \
     Invoke-Expression -command 'echo "$(cat /tmp/kubectl.sha256) /tmp/kubectl" | sha256sum --check' && \
     Copy-Item /tmp/kubectl /usr/local/bin
+
+# Install Kubelogin
+RUN Invoke-WebRequest -Uri $env:KUBELOGIN_VERSION_URL -OutFile /tmp/kubelogin.zip && \
+    Expand-Archive /tmp/kubelogin.zip /usr/local/bin
 
 # Clean the image
 RUN Remove-Item /tmp/* -Recurse -Force -Confirm:$false
