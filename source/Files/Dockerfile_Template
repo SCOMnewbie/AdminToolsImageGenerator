@@ -81,7 +81,7 @@ RUN Invoke-WebRequest -Uri $env:OPA_VERSION_URL -OutFile /usr/local/bin/opa && \
 RUN Invoke-WebRequest -Uri $env:KUBECTL_VERSION_URL -OutFile /tmp/kubectl && \
     Invoke-WebRequest -Uri $env:KUBECTL_SHA_VERSION_URL -OutFile /tmp/kubectl.sha256 && \
     Invoke-Expression -command 'echo "123 /tmp/kubectl" | sha256sum --check --status' && \
-    Invoke-Expression -command 'if(0 -ne $LASTEXITCODE){exit 1}' && \
+    Invoke-Expression -command 'if(0 -ne $LASTEXITCODE){Break}' && \
     Copy-Item /tmp/kubectl /usr/local/bin
 
 # Install Kubelogin
