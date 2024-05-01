@@ -10,6 +10,7 @@ jobs:
       name: Run Build
       runs-on: ubuntu-latest
       environment: Build
+      continue-on-error: false
       steps:
         - uses: actions/checkout@v1
         - name: ScriptBuild
