@@ -86,7 +86,8 @@ RUN Invoke-WebRequest -Uri $env:KUBECTL_VERSION_URL -OutFile /tmp/kubectl && \
 
 # Install Kubelogin
 RUN Invoke-WebRequest -Uri $env:KUBELOGIN_VERSION_URL -OutFile /tmp/kubelogin.zip && \
-    Expand-Archive /tmp/kubelogin.zip /usr/local/bin
+    Expand-Archive /tmp/kubelogin.zip  /tmp/kubelogin &&\
+    Copy-Item Copy-Item -Path /tmp/kubelogin/bin/linux_amd64/kubelogin -Destination /usr/local/bin
 
 # Clean the image
 RUN Remove-Item /tmp/* -Recurse -Force -Confirm:$false
