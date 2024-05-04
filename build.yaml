@@ -49,11 +49,6 @@ BuildWorkflow:
   build:
     - Clean
     - Build_Module_ModuleBuilder
-    #- generate_latest_dockerfile
-    #- connect_to_docker
-    #- docker_build
-    #- docker_tag
-    #- docker_push
   
   deploy:
     - generate_latest_dockerfile
