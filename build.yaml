@@ -44,10 +44,18 @@ BuildWorkflow:
   '.': # "." is the default Invoke-Build workflow. It is called when no -Tasks is specified to the build.ps1
     - build
     - test
+    - deploy
 
   build:
     - Clean
     - Build_Module_ModuleBuilder
+    #- generate_latest_dockerfile
+    #- connect_to_docker
+    #- docker_build
+    #- docker_tag
+    #- docker_push
+  
+  deploy:
     - generate_latest_dockerfile
     - connect_to_docker
     - docker_build
@@ -75,7 +83,6 @@ BuildWorkflow:
 
   publish:
     - publish_module_to_gallery
-
     - Publish_Release_To_GitHub
 
 
