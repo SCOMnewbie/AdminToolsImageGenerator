@@ -1,5 +1,5 @@
 Function Get-LatestGithubRepositoryReleaseVersion {
-    <#
+<#
 .SYNOPSIS
 
 Return the latest version of a Github released repository artifact.

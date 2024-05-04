@@ -12,7 +12,7 @@ Function Get-LatestStableKubectlVersion {
     Specify the product you're interrested in.
 
     .EXAMPLE
-    PS> Get-LatestStableKubectl
+    PS> Get-LatestStableKubectlVersion
     #>
     [CmdletBinding()]
     Param(

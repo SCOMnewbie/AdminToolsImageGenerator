@@ -1,6 +1,5 @@
 BeforeAll {
     $script:dscModuleName = 'AdminToolsImageGenerator'
-
     Import-Module -Name $script:dscModuleName
 }
 
@@ -9,11 +8,26 @@ AfterAll {
     Get-Module -Name $script:dscModuleName -All | Remove-Module -Force
 }
 
-Describe Get-LatestStableKubectlVersion {
+InModuleScope 'AdminToolsImageGenerator' {
+    Describe Get-LatestStableKubectlVersion {
+        BeforeAll {
+            Remove-Variable validinfo -ErrorAction SilentlyContinue
+            $validinfo = Get-LatestStableKubectlVersion
+        }
 
-    Context 'True should be true' {
-        It 'True should be true' {
-            $true | Should -Be $true
+        Context 'Without extra parameters' {
+            It 'Should not throw' {
+                $validinfo | Should -not -BeNullOrEmpty
+            }
+    
+            It 'Should be type of string' {
+                $validinfo | Should -BeOfType -ExpectedType 'system.String'
+            }
+    
+            It 'Should return a version' {
+                # return v1.30.0
+                { [System.Version]$($validinfo -replace 'v') } | Should -Not -Throw
+            }
         }
     }
 }

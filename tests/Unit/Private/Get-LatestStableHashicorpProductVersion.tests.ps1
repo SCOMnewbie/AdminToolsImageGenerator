@@ -9,19 +9,33 @@ AfterAll {
     Get-Module -Name $script:dscModuleName -All | Remove-Module -Force
 }
 
-Describe Get-LatestStableHashicorpProductVersion {
-   # BeforeAll {
-   #     Mock -CommandName Get-PrivateFunction -MockWith {
-   #         # This return the value passed to the Get-PrivateFunction parameter $PrivateData.
-   #         $PrivateData
-   #     } -ModuleName $dscModuleName
-   # }
-
-
-    Context 'True should be true' {
-        It 'True should be true' {
-            $true | Should -Be $true
+InModuleScope 'AdminToolsImageGenerator' {
+    Describe Get-LatestStableHashicorpProductVersion {
+        BeforeAll {
+            Remove-Variable validinfo -ErrorAction SilentlyContinue
+            $validinfo = Get-LatestStableHashicorpProductVersion -Product vault
+        }
+    
+        Context 'With Valid values' {
+            It 'Should not throw' {
+                $validinfo | Should -not -BeNullOrEmpty
+            }
+    
+            It 'Should be type of string' {
+                $validinfo | Should -BeOfType -ExpectedType 'system.String'
+            }
+    
+            It 'Should return a version' {
+                { [System.Version]$validinfo } | Should -Not -Throw
+            }
+        }
+    
+        Context 'With Wrong values' {
+            It 'Should throw' {
+                { Get-LatestStableHashicorpProductVersion -Product wrong } | Should -Throw
+            }
         }
     }
 }
+
 

@@ -8,7 +8,6 @@ function New-DockerFileFromTemplate {
 
     # declare paths
     $global:WorkingDirectory = $WorkingDirectory
-    #$global:ScriptsPath = Join-Path $WorkingDirectory scripts
 
     # Let's fetch the tools we want to update based on the DockerFile Template
 
@@ -24,7 +23,7 @@ function New-DockerFileFromTemplate {
     # Hashicorp_Vault
     # Github_project-copacetic/Copacetic
     # Github_aquasecurity/Trivy
-    $ToolsToUpdate = $DockerFileTemplate | select-string -Pattern $Regex | % Matches | % Groups | Group-Object -Property Name | where Name -eq 'ToolToUpdate' | % Group | % Value
+    $ToolsToUpdate = $DockerFileTemplate | select-string -Pattern $Regex | % Matches | % Groups | Group-Object -Property Name | Where-Object Name -eq 'ToolToUpdate' | % Group | % Value
 
     Write-Verbose "[$((Get-Date).TimeOfDay)] Number of tools to update: $($ToolsToUpdate.count)"
 
