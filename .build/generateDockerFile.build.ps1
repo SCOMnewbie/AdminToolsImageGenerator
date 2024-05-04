@@ -1,7 +1,7 @@
 task generate_latest_dockerfile {
     $path = Join-Path 'source' 'Files'
     New-DockerFileFromTemplate -WorkingDirectory $path
-    if(123 -ne $LASTEXITCODE){exit 1}
+    if(0 -ne $LASTEXITCODE){exit 1}
 }
 
 task connect_to_docker {
