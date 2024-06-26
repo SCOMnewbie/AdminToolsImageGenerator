@@ -50,11 +50,11 @@ RUN Invoke-WebRequest -Uri "https://aka.ms/InstallAzureCLIDeb" -OutFile /tmp/deb
 
 # Install Terraform 
 RUN Invoke-WebRequest -Uri $env:TERRAFORM_VERSION_URL -OutFile /tmp/terraform.zip && \
-    Expand-Archive /tmp/terraform.zip /usr/local/bin
+    Expand-Archive /tmp/terraform.zip /usr/local/bin -force
 
 # Install Vault CLI 
 RUN Invoke-WebRequest -Uri $env:VAULT_VERSION_URL -OutFile /tmp/vault.zip && \
-    Expand-Archive /tmp/vault.zip /usr/local/bin
+    Expand-Archive /tmp/vault.zip /usr/local/bin -force
 
 # Install Copacetic
 # https://project-copacetic.github.io/copacetic/website
@@ -87,7 +87,7 @@ RUN Invoke-WebRequest -Uri $env:KUBECTL_VERSION_URL -OutFile /tmp/kubectl && \
 
 # Install Kubelogin
 RUN Invoke-WebRequest -Uri $env:KUBELOGIN_VERSION_URL -OutFile /tmp/kubelogin.zip && \
-    Expand-Archive /tmp/kubelogin.zip  /tmp/kubelogin &&\
+    Expand-Archive /tmp/kubelogin.zip  /tmp/kubelogin -force &&\
     Copy-Item -Path /tmp/kubelogin/bin/linux_amd64/kubelogin -Destination /usr/local/bin
 
 # Clean the image
